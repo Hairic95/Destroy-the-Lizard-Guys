@@ -1,0 +1,33 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/pick_ups/pick_up.gd" type="Script" id=1]
+[ext_resource path="res://assets/textures/pick_up/coin_s.png" type="Texture" id=2]
+[ext_resource path="res://assets/sounds/item_pickup.wav" type="AudioStream" id=3]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 4.13251
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 28.7362
+
+[node name="coin" type="Area2D"]
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="collect_stream" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+volume_db = -9.087
+
+[node name="get_collected" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="attract_to_player" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="attract_to_player"]
+shape = SubResource( 2 )
+
+[connection signal="body_entered" from="." to="." method="_on_coin_body_entered"]
+[connection signal="finished" from="collect_stream" to="." method="_on_collect_stream_finished"]
+[connection signal="body_entered" from="attract_to_player" to="." method="_on_attract_to_player_body_entered"]

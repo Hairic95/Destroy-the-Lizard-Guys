@@ -1,0 +1,140 @@
+[gd_scene load_steps=14 format=2]
+
+[ext_resource path="res://src/Levels/Level_0.gd" type="Script" id=1]
+[ext_resource path="res://src/pick_ups/LittleCoin.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/pick_ups/BigCoin.tscn" type="PackedScene" id=3]
+[ext_resource path="res://assets/textures/bg.png" type="Texture" id=4]
+[ext_resource path="res://src/Levels/entities.gd" type="Script" id=5]
+[ext_resource path="res://src/Wave/Spawner.tscn" type="PackedScene" id=6]
+[ext_resource path="res://src/Enemies/RunningEnemy.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/player/MapPlayer.tscn" type="PackedScene" id=8]
+[ext_resource path="res://assets/font/fantasque-sans-mono/FantasqueSansMono-Regular.ttf" type="DynamicFontData" id=9]
+[ext_resource path="res://assets/music/mainTheme.wav" type="AudioStream" id=10]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 20, 4 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 30, 4 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 12
+outline_size = 1
+use_mipmaps = true
+font_data = ExtResource( 9 )
+
+[node name="Level" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+smallCoin_ref = ExtResource( 2 )
+bigCoin_ref = ExtResource( 3 )
+
+[node name="TileMap" type="Sprite" parent="."]
+texture = ExtResource( 4 )
+centered = false
+
+[node name="obstacles" type="StaticBody2D" parent="." groups=[
+"ground",
+]]
+
+[node name="body_0" type="CollisionPolygon2D" parent="obstacles"]
+position = Vector2( 0, -320 )
+polygon = PoolVector2Array( 0, 490, 320, 490, 320, 550, 0, 550 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="obstacles"]
+polygon = PoolVector2Array( 0, 190, 0, 0, 320, 0, 320, 190, 350, 190, 350, -30, -30, -30, -30, 190 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="obstacles"]
+position = Vector2( 50, 124 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="obstacles"]
+position = Vector2( 268, 126 )
+shape = SubResource( 1 )
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="obstacles"]
+position = Vector2( 160, 90 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="obstacles"]
+position = Vector2( 74, 60 )
+shape = SubResource( 2 )
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="obstacles"]
+position = Vector2( 250, 60 )
+shape = SubResource( 2 )
+
+[node name="coins" type="Node2D" parent="."]
+
+[node name="entities" type="Node2D" parent="."]
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_lock_": true
+}
+spanwer_ref = ExtResource( 6 )
+running_enemy_ref = ExtResource( 7 )
+
+[node name="MapPlayer" parent="entities" instance=ExtResource( 8 )]
+position = Vector2( 140, 155 )
+z_index = 1
+
+[node name="bullets" type="Node2D" parent="."]
+
+[node name="UI" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="PauseMenu" type="Panel" parent="UI"]
+visible = false
+margin_left = 12.0
+margin_top = 8.0
+margin_right = 310.0
+margin_bottom = 160.0
+rect_min_size = Vector2( 298, 152 )
+
+[node name="Points" type="Label" parent="UI"]
+margin_left = 14.0
+margin_top = 8.0
+margin_right = 50.0
+margin_bottom = 21.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Points:"
+
+[node name="value" type="Label" parent="UI/Points"]
+margin_left = 42.0
+margin_right = 62.0
+margin_bottom = 13.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "0"
+align = 2
+
+[node name="Waves" type="Label" parent="UI"]
+margin_left = 244.0
+margin_top = 8.0
+margin_right = 286.0
+margin_bottom = 21.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Waves:"
+
+[node name="value" type="Label" parent="UI/Waves"]
+margin_left = 42.0
+margin_right = 62.0
+margin_bottom = 13.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "1"
+align = 2
+
+[node name="music_stream" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+volume_db = -11.107
+autoplay = true
+
+[connection signal="finished" from="music_stream" to="." method="_on_music_stream_finished"]
